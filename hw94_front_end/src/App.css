@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  position: relative;
+}
+
+.App {
+  display: grid;
+  height: 100%;
+  width: 100%;
+}
+
+.h2 {
+  display: grid;
+  justify-self: center;
+  grid-column: 1 / 3;
+}
+
+.column {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 10px;
+}
+
+.one_artist {
+  display: grid;
+  grid-column: 1 / 4;
+  text-align: center;
+}
+
+.artist_p,
+.album_p {
+  grid-column: 1 / 4;
+  justify-self: center;
+}
+
+.yt_frame {
+  height: fit-content;
+}
+
+.track_thumbnail {
+  grid-column: 2 / 4;
+  justify-self: center;
+}
+
+.img_thumbnail {
+    width: 200px;
+    height: 200px;
+}
+
+.add_album {
+  display: grid;
+  justify-self: right;
+}
+
+.form_div {
+  display: grid;
+  grid-template-columns: auto;
+  width: 50%;
+  justify-self: center;
+}
+
+.form {
+  display: grid;
+  grid-row-gap: 10px;
+  grid-template-columns: auto;
+  padding: 10px;
+}
+
+.nav_bar {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 40%;
+}
+
+.nav_bar2 {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  padding-left: 100px;
+}
+
+.invalid-feedback,
+.alert {
+  color: red;
+}
+
+.history_div {
+  display: grid;
+  grid-template-columns: repeat(3, 30%);
+  margin-bottom: 10px;
+}
+
+.yt_btn {
+  height: 20px;
+}
+
+.iframe_wrapper {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+}
+
+.yt_frame {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+}
+
+.tracks_div {
+  color: rgb(0, 0, 238);
+  cursor: pointer;
+}
+
+.main_register_div,
+.main_login_div,
+.main_div {
+  display: grid;
+}
+
+.main_nav {
+  display: grid;
+  grid-template-columns: 10% auto;
+  padding: 20px;
+}
+
+.user_menu,
+.anonymous_menu {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+}
+
+.menu_li {
+  display: inline;
+  margin-left: 50px;
+}
+
+.active {
+  color: limegreen;
+}
+
+.delete_btn {
+  background: red;
+}
+
+.publish_btn {
+  background: limegreen;
+}
+
+.artist_thumbnail {
+  margin-bottom: 15px;
+}
+
+.not_published {
+  background: orange;
+  width: fit-content;
+}
