@@ -1,6 +1,7 @@
 const express = require('express');
 const nanoid = require('nanoid');
 const Track = require('../models/Track');
+const Album = require('../models/Album');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const permit = require('../middleware/permit');
@@ -45,13 +46,23 @@ router.get('/', tryAuth, async (req, res) => {
     }
 });
 
-router.post('/', auth, (req, res) => {
-    const trackData = req.body;
-    trackData.user = req.user;
-    const track = new Track(trackData);
-    track.save()
-        .then(() => res.send({message: 'Ok'}))
-        .catch(error => res.status(400).send(error));
+router.post('/', auth, async (req, res) => {
+    try {
+        const trackData = req.body;
+        trackData.user = req.user;
+
+        let tracks = await Track.find({album: req.body.album}).sort({number: 1});
+        trackData.number = tracks.length + 1;
+
+        console.log('this is tracks ', tracks.length);
+
+        const track = new Track(trackData);
+        await track.save();
+        res.send({message: 'Ok'});
+    } catch (e) {
+        res.status(400).send(e);
+    }
+
 });
 
 router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) => {
@@ -61,15 +72,18 @@ router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) =
     }
     track.published = !track.published;
     await track.save();
-    return res.send(track);
+    const tracks = await Track.find();
+    return res.send(tracks);
 });
 
 router.delete('/', [auth, permit('admin')], async (req, res) => {
     try {
         const track = await Track.findById(req.query.id);
+
         if (track) {
-            track.remove();
-            return res.status(200).send('Successfully deleted ' + track);
+            await track.remove();
+            const tracks = await Track.find();
+            return res.status(200).send(tracks);
         } else {
             return res.status(400).send('Not found !');
         }
