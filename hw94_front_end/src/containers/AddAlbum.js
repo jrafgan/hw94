@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {createAlbum, getArtists} from "../store/actions/musicActions";
 import connect from "react-redux/es/connect/connect";
+import FormElement from "../components/FormElement";
 
 class AddAlbum extends Component {
 
@@ -50,6 +51,10 @@ class AddAlbum extends Component {
         });
     };
 
+    getFieldError = fieldName => {
+        return this.props.error && this.props.error.errors && this.props.error.errors[fieldName] && this.props.error.errors[fieldName].message;
+    };
+
     render() {
 
         return (
@@ -60,8 +65,17 @@ class AddAlbum extends Component {
                 <div className="album_form">
                     <h3 className="h3">Добавить альбом</h3>
                     <form className="form" onSubmit={this.submitFormHandler}>
-                        <label htmlFor="title">Название</label>
-                        <input type="text" name="title" id="title" value={this.state.title} onChange={this.inputChangeHandler}/>
+                        <FormElement
+                            propertyName="title"
+                            title="Название"
+                            type="text"
+                            value={this.state.title}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('title')}
+                            placeholder="Enter your desired title"
+                            autocomplete="new-title"
+                        />
+
                         <label htmlFor="artist">Исполнитель</label>
                         <select id="artist" onChange={this.selectChangeHandler} required>
                             <option value=''>--Выберите исполнителя--</option>
@@ -69,10 +83,21 @@ class AddAlbum extends Component {
                                 return <option value={item._id} key={item._id}>{item.name}</option>
                             }) : null}
                         </select>
-                        <label htmlFor="year">Год выпуска</label>
-                        <input type="text" name="year" id="year" value={this.state.year} onChange={this.inputChangeHandler}/>
+                        <FormElement
+                            propertyName="year"
+                            title="Год выпуска"
+                            type="text"
+                            value={this.state.year}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('year')}
+                            placeholder="Enter your desired year"
+                            autocomplete="new-year"
+                        />
                         <label htmlFor="image">Изображение</label>
                         <input type="file" name="image" id="image" onChange={this.fileChangeHandler}/>
+                        {this.getFieldError('image') && (<div className="invalid-feedback">
+                            {this.getFieldError('image')}
+                        </div>)}
                         <button type="submit" className="field_save_btn">Сохранить</button>
                     </form>
                 </div>
@@ -83,6 +108,7 @@ class AddAlbum extends Component {
 
 const mapStateToProps = state => ({
     artists: state.music.artists,
+    error: state.music.error,
 });
 
 const mapDispatchToProps = dispatch => ({
