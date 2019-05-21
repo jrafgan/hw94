@@ -13,6 +13,12 @@ import connect from "react-redux/es/connect/connect";
 
 class AlbumInfo extends Component {
 
+    state = {
+        showArtists: false,
+        showAlbums: false,
+        showTracks: false,
+    };
+
     componentDidMount() {
         this.props.getArtists();
         this.props.getAlbums();
@@ -33,7 +39,6 @@ class AlbumInfo extends Component {
 
     togglePublishArtist = e => {
         this.props.togglePublishArtist(e.target.id);
-
     };
 
     togglePublishAlbum = e => {
@@ -44,44 +49,62 @@ class AlbumInfo extends Component {
         this.props.togglePublishTrack(e.target.id);
     };
 
+    toggleShowArtists = () =>{
+        this.setState({showArtists: !this.state.showArtists})
+    };
+
+    toggleShowAlbums = () =>{
+        this.setState({showAlbums: !this.state.showAlbums})
+    };
+
+    toggleShowTracks = () =>{
+        this.setState({showTracks: !this.state.showTracks})
+    };
+
     render() {
         return (
             <Fragment>
                 <div className="column">
-                    <p className="album_p">Артисты</p>
-                    {this.props.artists ? this.props.artists.map(artist => <div className="artist_thumbnail"
+                    <p className="album_p" onClick={this.toggleShowArtists}>Артисты &#8595;</p>
+                    {this.state.showArtists && this.props.artists ? this.props.artists.map(artist => <div className="artist_thumbnail"
                                                                                 key={artist._id}>
-                        <ImageThumbnail image={artist.image}/>
+                        <ImageThumbnail image={artist.image} class="small_img_thumbnail"/>
                         <p>{artist.name}</p>
-                        {!artist.published ? <button id={artist._id} className="publish_btn"
-                                                     onClick={this.togglePublishArtist}>Опубликовать</button> :
+                        {!artist.published ? <Fragment><button id={artist._id} className="publish_btn"
+                                                     onClick={this.togglePublishArtist}>Опубликовать</button>
+                            <button id={artist._id} className="delete_btn"
+                            onClick={this.deleteArtist}>Удалить</button></Fragment> :
                             <button id={artist._id} className="delete_btn"
                                     onClick={this.deleteArtist}>Удалить</button>}
 
                     </div>) : null}
                     <Fragment>
-                        <p className="album_p">Альбомы</p>
-                        {this.props.albums ? this.props.albums.map(item => {
+                        <p className="album_p" onClick={this.toggleShowAlbums}>Альбомы &#8595;</p>
+                        {this.state.showAlbums && this.props.albums ? this.props.albums.map(item => {
                             return <div className="artist_thumbnail" key={item._id}>
-                                <ImageThumbnail image={item.image}/>
+                                <ImageThumbnail image={item.image} class="small_img_thumbnail"/>/>
                                 <p>{item.title}</p>
                                 <p>{item.year}-год</p>
-                                {!item.published ? <button id={item._id} className="publish_btn"
-                                                           onClick={this.togglePublishAlbum}>Опубликовать</button> :
+                                {!item.published ? <Fragment><button id={item._id} className="publish_btn"
+                                                                     onClick={this.togglePublishAlbum}>Опубликовать</button>
+                                        <button id={item._id} className="delete_btn"
+                                                onClick={this.deleteAlbum}>Удалить</button></Fragment> :
                                     <button id={item._id} className="delete_btn"
                                             onClick={this.deleteAlbum}>Удалить</button>}
                             </div>
                         }) : null}
                     </Fragment>
                     <Fragment>
-                        <p className="album_p">Трэки</p>
-                        {this.props.tracks ? this.props.tracks.map(item => {
+                        <p className="album_p" onClick={this.toggleShowTracks}>Трэки &#8595;</p>
+                        {this.state.showTracks && this.props.tracks ? this.props.tracks.map(item => {
                             return <div className="artist_thumbnail" key={item._id}>
                                 <span>{item.number}. </span>
                                 <span id={item._id}> {item.title} </span>
                                 <span> {item.duration} </span>
-                                {!item.published ? <button id={item._id} className="publish_btn"
-                                                           onClick={this.togglePublishTrack}>Опубликовать</button> :
+                                {!item.published ? <Fragment><button id={item._id} className="publish_btn"
+                                                                     onClick={this.togglePublishTrack}>Опубликовать</button>
+                                        <button id={item._id} className="delete_btn"
+                                                onClick={this.deleteTrack}>Удалить</button></Fragment> :
                                     <button id={item._id} className="delete_btn"
                                             onClick={this.deleteTrack}>Удалить</button>}
                             </div>
