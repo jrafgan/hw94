@@ -19,8 +19,15 @@ class TrackInfo extends Component {
     }
 
     onSaveTrack = e => {
-        const id = e.target.id;
+        let id = e.target.id;
+        if (e.target.id.length > 24) {
+            id = e.target.parentNode.id;
+        }
         this.props.saveTrack(id);
+    };
+
+    closePlayer = () => {
+        this.setState({showPlayer: false})
     };
 
     handler = e => {
@@ -28,17 +35,12 @@ class TrackInfo extends Component {
         this.setState({showPlayer: true, src: id});
     };
 
-    closePlayer = () => {
-        this.setState({showPlayer: false})
-    };
-
     render() {
-        if (this.props.artist) console.log(this.props.artist);
         return (
             <div className="column">
                 {this.state.showPlayer ? <div className="iframe_wrapper" onClick={this.closePlayer}>
                     <div className="yt_frame">
-                        <iframe title="Test1"
+                        <iframe title="hw94"
                                 id="player"
                                 width="640"
                                 height="360"
@@ -48,14 +50,15 @@ class TrackInfo extends Component {
                     </div>
                 </div> : null}
                 <div className="one_artist">
-                    {this.props.album ? <div className="artist_thumbnail" key={this.props.album.artist._id}>
-                        <ImageThumbnail image={this.props.album.artist.image}/>
+                    {this.props.album ? <div className="one_artist_thumbnail" key={this.props.album.artist._id}>
+                        <div><ImageThumbnail image={this.props.album.artist.image} class="small_img_thumbnail"/>
                         <p>{this.props.album.artist.name}</p>
+                        </div>
                         <p>{this.props.album.artist.description}</p>
                     </div> : null}
                 </div>
                 {this.props.album ? <div className="artist_thumbnail">
-                    <ImageThumbnail image={this.props.album.image}/>
+                    <ImageThumbnail image={this.props.album.image} class="img_thumbnail"/>
                     <p>{this.props.album.title}</p>
                     <p>{this.props.album.year}-год</p>
                 </div> : null}
@@ -69,7 +72,7 @@ class TrackInfo extends Component {
                             <span> {track.duration} </span>
                             {track.youtube ?
                                 <img src={btnImg} onClick={this.handler} alt="btn" className="yt_btn"
-                                     id={track.youtube}/> : null}
+                                     id={track.youtube} /> : null}
                             <p className="not_published">{track.published ? '' : 'not published'}</p>
                         </div>
                     }) : null}

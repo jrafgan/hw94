@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {logoutUser} from "./store/actions/usersActions";
 import Routes from "./Routes";
 import Layout from "./components/Layout";
+import {NotificationContainer} from "react-notifications";
 
 class App extends Component {
   render() {
@@ -12,6 +13,7 @@ class App extends Component {
         <header>
             <Layout user={this.props.user} logout={this.props.logoutUser}/>
         </header>
+          <NotificationContainer/>
         <div className="main_div">
             <Routes user={this.props.user} />
         </div>

@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {createTrack, getAlbums, getArtists} from "../store/actions/musicActions";
 import connect from "react-redux/es/connect/connect";
+import FormElement from "../components/FormElement";
 
-class AddAlbum extends Component {
+class AddTrack extends Component {
 
     state = {
         title: '',
         artist: '',
         album: '',
-        number: '',
         duration: '',
         youtube: ''
     };
@@ -42,6 +42,10 @@ class AddAlbum extends Component {
         });
     };
 
+    getFieldError = fieldName => {
+        return this.props.error && this.props.error.errors && this.props.error.errors[fieldName] && this.props.error.errors[fieldName].message;
+    };
+
     render() {
 
         return (
@@ -52,9 +56,16 @@ class AddAlbum extends Component {
                 <div className="album_form">
                     <h3 className="h3">Добавить трэк</h3>
                     <form className="form" onSubmit={this.submitFormHandler}>
-                        <label htmlFor="title">Название</label>
-                        <input type="text" name="title" id="title" value={this.state.title}
-                               onChange={this.inputChangeHandler}/>
+                        <FormElement
+                            propertyName="title"
+                            title="Название"
+                            type="text"
+                            value={this.state.title}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('title')}
+                            placeholder="Enter your desired title"
+                            autocomplete="new-title"
+                        />
                         <label htmlFor="artist">Исполнитель</label>
                         <select id="artist" onChange={this.selectChangeHandler} required>
                             <option value=''>--Выберите исполнителя--</option>
@@ -69,15 +80,27 @@ class AddAlbum extends Component {
                                 return <option value={item._id} key={item._id}>{item.title}</option>
                             }) : null}
                         </select>
-                        <label htmlFor="number">Номер трэка</label>
-                        <input type="text" name="number" id="number" value={this.state.number}
-                               onChange={this.inputChangeHandler}/>
-                        <label htmlFor="duration">Продолжительность трэка</label>
-                        <input type="text" name="duration" id="duration" value={this.state.duration}
-                               onChange={this.inputChangeHandler}/>
-                        <label htmlFor="youtube">Ссылка на youtube</label>
-                        <input type="text" name="youtube" id="youtube" value={this.state.youtube}
-                               onChange={this.inputChangeHandler} placeholder="Enter in this format https://www.youtube.com/embed/Izf0BJBQ5e8"/>
+                        <FormElement
+                            propertyName="duration"
+                            title="Продолжительность трэка"
+                            type="text"
+                            value={this.state.duration}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('duration')}
+                            placeholder="Enter your desired duration"
+                            autocomplete="new-duration"
+                        />
+
+                        <FormElement
+                            propertyName="youtube"
+                            title="Ссылка на youtube"
+                            type="text"
+                            value={this.state.youtube}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('youtube')}
+                            placeholder="Enter in this format https://www.youtube.com/embed/Izf0BJBQ5e8"
+                            autocomplete="new-youtube"
+                        />
 
                         <button type="submit" className="field_save_btn">Сохранить</button>
                     </form>
@@ -90,6 +113,7 @@ class AddAlbum extends Component {
 const mapStateToProps = state => ({
     artists: state.music.artists,
     albums: state.music.albums,
+    error: state.music.error,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -98,4 +122,4 @@ const mapDispatchToProps = dispatch => ({
     createTrack: trackData => dispatch(createTrack(trackData)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddAlbum);
+export default connect(mapStateToProps, mapDispatchToProps)(AddTrack);

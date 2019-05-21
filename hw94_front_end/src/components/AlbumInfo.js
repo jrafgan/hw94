@@ -19,15 +19,17 @@ class AlbumInfo extends Component {
 
                     <p className="album_p">Альбомы</p>
                     <div className="one_artist">
-                    {this.props.artist ? <div className="artist_thumbnail" key={this.props.artist._id}>
-                            <ImageThumbnail image={this.props.artist.image}/>
-                            <p>{this.props.artist.name}</p>
+                        {this.props.artist ? <div className="one_artist_thumbnail" key={this.props.artist._id}>
+                            <div>
+                                <ImageThumbnail image={this.props.artist.image} class="small_img_thumbnail"/>
+                                <p>{this.props.artist.name}</p>
+                            </div>
                             <p>{this.props.artist.description}</p>
                         </div> : null}
                     </div>
                     {this.props.albums ? this.props.albums.map(item => {
                         return <div className="artist_thumbnail" key={item._id}>
-                            <ImageThumbnail image={item.image}/>
+                            <ImageThumbnail image={item.image} class="img_thumbnail"/>/>
                             <p className="not_published">{item.published ? '' : 'not published'}</p>
                             <p>{item.title}</p>
                             <p>{item.year}-год</p>

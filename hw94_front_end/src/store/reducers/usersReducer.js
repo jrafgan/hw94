@@ -10,7 +10,6 @@ const initialState = {
     registerError: null,
     loginError: null,
     history: null,
-    token: null,
     user: null
 };
 
@@ -18,7 +17,7 @@ const usersReducer = (state = initialState, action) => {
     switch (action.type) {
 
         case REGISTER_USER_SUCCESS:
-            return {...state, registerError: null};
+            return {...state, user: action.user, registerError: null};
 
         case REGISTER_USER_FAILURE:
             return ({
@@ -27,7 +26,7 @@ const usersReducer = (state = initialState, action) => {
             });
 
         case LOGIN_USER_SUCCESS:
-            return {...state, user: action.user, token: action.user.token, loginError: null};
+            return {...state, user: action.user, loginError: null};
 
         case LOGIN_USER_FAILURE:
             return {...state, loginError: action.error};

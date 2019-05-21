@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {createArtist} from "../store/actions/musicActions";
 import connect from "react-redux/es/connect/connect";
+import FormElement from "../components/FormElement";
 
 class AddArtist extends Component {
 
@@ -38,6 +39,10 @@ class AddArtist extends Component {
         });
     };
 
+    getFieldError = fieldName => {
+        return this.props.error && this.props.error.errors && this.props.error.errors[fieldName] && this.props.error.errors[fieldName].message;
+    };
+
     render() {
 
         return (
@@ -47,12 +52,33 @@ class AddArtist extends Component {
                 <div className="artist_form">
                     <h3 className="h3">Добавить исполнителя</h3>
                     <form className="form" onSubmit={this.submitFormHandler}>
-                        <label htmlFor="name">Исполнитель</label>
-                        <input type="text" name="name" id="name" value={this.state.name} onChange={this.inputChangeHandler}/>
-                        <label htmlFor="description">Описание</label>
-                        <input type="text" name="description" id="description" value={this.state.description} onChange={this.inputChangeHandler}/>
+                        <FormElement
+                            propertyName="name"
+                            title="Исполнитель"
+                            type="text"
+                            value={this.state.name}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('name')}
+                            placeholder="Enter your desired name"
+                            autocomplete="new-name"
+                        />
+
+                        <FormElement
+                            propertyName="description"
+                            title="Описание"
+                            type="text"
+                            value={this.state.description}
+                            onChange={this.inputChangeHandler}
+                            error={this.getFieldError('description')}
+                            placeholder="Enter your desired description"
+                            autocomplete="new-description"
+                        />
+
                         <label htmlFor="image">Изображение</label>
                         <input type="file" name="image" id="image" onChange={this.fileChangeHandler}/>
+                        {this.getFieldError('image') && (<div className="invalid-feedback">
+                            {this.getFieldError('image')}
+                        </div>)}
                         <button type="submit" className="field_save_btn">Сохранить</button>
                     </form>
                 </div>
@@ -61,8 +87,12 @@ class AddArtist extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    error: state.music.error,
+});
+
 const mapDispatchToProps = dispatch => ({
     addArtist: (artistData) => dispatch(createArtist(artistData)),
 });
 
-export default connect(null, mapDispatchToProps)(AddArtist);
+export default connect(mapStateToProps, mapDispatchToProps)(AddArtist);

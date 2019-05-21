@@ -1,12 +1,14 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
+import ImageThumbnail from "./ImageThumbnail";
 
 const UserMenu = ({user, logout}) => {
 
     return (
         <div className="user_menu">
             <div>
-                Привет, {user.username}!
+                Привет, {user.name}!
+                <ImageThumbnail image={user.image} class="avatar_img" facebookId={user.facebookId}/>
             </div>
             {user.username === 'admin' ? <NavLink to="/admin_office/" exact>Админ офис</NavLink> : null}
             <NavLink to="/add_artist" exact>Добавить исполнителя</NavLink>

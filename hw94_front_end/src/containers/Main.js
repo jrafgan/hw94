@@ -37,9 +37,9 @@ class Main extends Component {
                         <p className="artist_p">Исполнители</p>
                         {this.props.artists ? this.props.artists.map(item => {
                             return <div className="artist_thumbnail" key={item._id} id={item._id}  >
-                                <ImageThumbnail image={item.image}/>
+                                <ImageThumbnail image={item.image} class="img_thumbnail"/>/>
                                 <p>{item.name}</p>
-                                <p>{item.description}</p>
+                                <p className="artist_description">{item.description}</p>
                                 <Link to={"/album_info/" + item._id}>Альбомы</Link>
                             </div>
                         }) : null}

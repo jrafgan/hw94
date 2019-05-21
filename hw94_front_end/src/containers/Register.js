@@ -6,7 +6,9 @@ import FormElement from "../components/FormElement";
 class Register extends Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        name: '',
+        image: ''
     };
 
     inputChangeHandler = e => {
@@ -17,11 +19,28 @@ class Register extends Component {
 
     submitFormHandler = e => {
         e.preventDefault();
-        this.props.registerUser({...this.state});
+        if (this.state.image) {
+            const formData = new FormData();
+            Object.keys(this.state).forEach(key => {
+                if (this.state[key] !== null) {
+                    formData.append(key, this.state[key]);
+                }
+            });
+            this.props.registerUser(formData);
+        } else {
+            this.props.registerUser({...this.state});
+        }
+
     };
 
     getFieldError = fieldName => {
         return this.props.error && this.props.error.errors && this.props.error.errors[fieldName] && this.props.error.errors[fieldName].message;
+    };
+
+    fileChangeHandler = e => {
+        this.setState({
+            [e.target.name]: e.target.files[0]
+        });
     };
 
     render() {
@@ -33,6 +52,7 @@ class Register extends Component {
                     </div>
                 )}
                 <form className="form" onSubmit={this.submitFormHandler}>
+
                     <FormElement
                         propertyName="username"
                         title="Username"
@@ -53,6 +73,18 @@ class Register extends Component {
                         placeholder="Enter new secure password"
                         autocomplete="new-password"
                     />
+                    <FormElement
+                        propertyName="name"
+                        title="Display name"
+                        type="name"
+                        value={this.state.name}
+                        onChange={this.inputChangeHandler}
+                        error={this.getFieldError('name')}
+                        placeholder="Enter new-name"
+                        autocomplete="new-name"
+                    />
+                    <label htmlFor="image">Изображение</label>
+                    <input type="file" name="image" id="image" onChange={this.fileChangeHandler}/>
                     <div>
                         <button type="submit" className="submit_btn">Register</button>
                     </div>
