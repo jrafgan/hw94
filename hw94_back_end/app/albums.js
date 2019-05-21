@@ -60,7 +60,8 @@ router.get('/', tryAuth, async (req, res) => {
 
 router.get('/:id', (req, res) => {
 
-    Album.findOne({_id: req.params.id}).populate('artist').then(album => {
+    const criteria = {_id: req.params.id};
+    Album.findOne(criteria).populate('artist').then(album => {
         if (album) res.send(album);
         else res.sendStatus(404);
     }).catch(() => res.sendStatus(500));
@@ -87,15 +88,19 @@ router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) =
     }
     album.published = !album.published;
     await album.save();
-    return res.send(album);
+    const albums = await Album.find();
+    return res.send(albums);
 });
 
 router.delete('/', [auth, permit('admin')], async (req, res) => {
     try {
-        const album = await Album.findById(req.query.id);
+        const id = req.query.id;
+        const album = await Album.findById(id);
+
         if (album) {
-            album.remove();
-            return res.status(200).send('Successfully deleted ' + album);
+            await album.remove();
+            const albums = await Album.find();
+            return res.status(200).send(albums);
         } else {
             return res.status(400).send('Not found !');
         }
