@@ -75,7 +75,8 @@ router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) =
         }
         artist.published = !artist.published;
         await artist.save();
-        return res.send(artist);
+        const artists = await Artist.find();
+        return res.send(artists);
     } catch (e) {
         return res.status(500).send(e);
     }
@@ -84,9 +85,11 @@ router.post('/:id/toggle_published', [auth, permit('admin')], async (req, res) =
 router.delete('/', [auth, permit('admin')], async (req, res) => {
     try {
         const artist = await Artist.findById(req.query.id);
+
         if (artist) {
-            artist.remove();
-            return res.status(200).send('Successfully deleted ' + artist);
+            await artist.remove();
+            const artists = await Artist.find();
+            return res.status(200).send(artists);
         } else {
             return res.status(400).send('Not found !');
         }
