@@ -26,10 +26,12 @@ const TrackSchema = new Schema({
     required: true
   },
   number: {
-    type: String,
+    type: Number,
     required: true
   },
-  youtube: String,
+  youtube: {
+    type: String
+  },
 });
 
 const Track = mongoose.model('Track', TrackSchema);

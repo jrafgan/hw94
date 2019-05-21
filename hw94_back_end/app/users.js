@@ -1,20 +1,44 @@
 const express = require('express');
 const auth = require('../middleware/auth');
+const path = require('path');
 const User = require('../models/User');
 const router = express.Router();
+const config = require('../config');
+const axios = require('axios');
+const nanoid = require('nanoid');
+const multer = require('multer');
 
-router.post('/', async (req, res) => {
-    const user = new User({
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, config.uploadPath);
+    },
+    filename: (req, file, cb) => {
+        cb(null, nanoid() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({storage});
+
+router.post('/', upload.single('image'), async (req, res) => {
+
+    let userData = req.body;
+    userData = {
         username: req.body.username,
-        password: req.body.password
-    });
-    user.generateToken();
+        password: req.body.password,
+        name: req.body.name,
+    };
+    if (req.file) {
+        userData.image = req.file.filename;
+    }
 
+    const user = new User(userData);
+    user.generateToken();
     try {
         await user.save();
-        return res.send({message: 'User registered ', user});
-    } catch (error) {
-        return res.status(400).send(error)
+        return res.send({user: user});
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send(e)
     }
 });
 
@@ -54,13 +78,50 @@ router.delete('/sessions', async (req, res) => {
     return res.send(success);
 });
 
+router.post('/facebookLogin', async (req, res) => {
+    const inputToken = req.body.accessToken;
+    const accessToken = config.facebook.appId + '|' + config.facebook.appSecret;
+    const debugTokenUrl = `https://graph.facebook.com/debug_token?input_token=${inputToken}&access_token=${accessToken}`;
+
+    try {
+
+        const response = await axios.get(debugTokenUrl);
+
+        const responseData = response.data;
+
+        if (responseData.data.error) {
+            return res.status(500).send({error: 'Token incorrect'});
+        }
+
+        if (responseData.data.user_id !== req.body.id) {
+            return res.status(500).send({error: 'User is wrong'});
+        }
+
+        let user = await User.findOne({facebookId: req.body.id});
+
+        if (!user) {
+
+            user = new User({
+                username: req.body.email || req.body.id,
+                password: nanoid(),
+                facebookId: req.body.id,
+                name: req.body.name,
+                image: req.body.picture.data.url
+            });
+        }
+
+        user.generateToken();
+        await user.save();
+        return res.send({user: user});
+
+    } catch (e) {
+        return res.status(500).send({error: 'Something went wrong'});
+    }
+});
+
 router.put('/', auth, async (req, res) => {
-
-
     req.user.password = req.body.password;
-
     await req.user.save();
-
     res.sendStatus(200);
 });
 

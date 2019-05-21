@@ -33,7 +33,18 @@ const UserSchema = new Schema({
   token: {
     type: String,
     required: true
+  },
+  facebookId: {
+    type: String
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String
   }
+
 });
 
 UserSchema.methods.checkPassword = function(password) {

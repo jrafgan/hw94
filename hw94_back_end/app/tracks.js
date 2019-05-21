@@ -53,9 +53,6 @@ router.post('/', auth, async (req, res) => {
 
         let tracks = await Track.find({album: req.body.album}).sort({number: 1});
         trackData.number = tracks.length + 1;
-
-        console.log('this is tracks ', tracks.length);
-
         const track = new Track(trackData);
         await track.save();
         res.send({message: 'Ok'});

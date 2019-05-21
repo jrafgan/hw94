@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const HistorySchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     trackId: {
         type: String,
         required: true
@@ -17,9 +22,6 @@ const HistorySchema = new Schema({
     datetime: { type : Date, default: Date.now }
 });
 
-HistorySchema.methods.date = function() {
-    this.datetime = new Date().toLocaleString();
-};
 
 const History = mongoose.model('History', HistorySchema);
 

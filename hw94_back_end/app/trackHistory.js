@@ -7,7 +7,6 @@ const Album = require('../models/Album');
 const Artist = require('../models/Artist');
 
 router.get('/', auth, async (req, res) => {
-    console.log('this is user: ', req.user);
     try {
         const history  = await History.find({user: req.user._id}).sort({datetime: -1});
         res.send(history);
@@ -18,7 +17,6 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post('/', auth, async (req, res) => {
-        console.log('this is user', req.user);
     try {
         const track = await Track.findById(req.body.trackId);
         const album = await Album.findById(track.album);

@@ -8,5 +8,9 @@ module.exports = {
     mongoOptions: {
       useNewUrlParser: true,
       useCreateIndex: true
-    }
+    },
+  facebook: {
+    appId: '352798085373485',
+    appSecret: 'f5bfa3e4c88a9b1e0956aa0d5fb3e020'
+  }
 };
